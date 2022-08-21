@@ -1,6 +1,6 @@
 {
   "name": "binance-ts-connector",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Binance connector using typescript",
   "main": "dist/index.js",
   "types": "dist/interfaces.d.ts",

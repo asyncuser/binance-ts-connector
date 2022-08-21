@@ -1,5 +1,4 @@
 import axios from "axios";
-import * as crypto from "crypto";
 import * as qs from 'qs'
 
 import {
@@ -25,9 +24,11 @@ export class Connector {
 		this.signFunction = options?.signFunction || this.signRequest
 	}
 
-	private signRequest(queryString: string) {
+	private signRequest(queryString: string, apiSecret: string) {
+		const crypto = require('crypto')
+
 		return crypto
-			.createHmac('sha256', this.apiSecret)
+			.createHmac('sha256', apiSecret)
 			.update(queryString)
 			.digest('hex')
 	}
@@ -35,7 +36,7 @@ export class Connector {
 	private async request(method: 'GET' | 'POST', path: string, params: any = {}): Promise<{ data?: any, error?: any }> {
 		params = removeEmptyValue(params)
 		const queryString = qs.stringify({ ...params, timestamp: Date.now() })
-		const signature = this.signRequest(queryString)
+		const signature = this.signFunction(queryString, this.apiSecret)
 
 		const methods = {
 			'GET': () => axios.get(`${this.baseUrl}/${path}?${queryString}&signature=${signature}`, {
