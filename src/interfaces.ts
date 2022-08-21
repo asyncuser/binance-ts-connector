@@ -1,6 +1,6 @@
 export interface connectorOptions {
 	apiUrl?: string
-	signFunction: () => void
+	signFunction: (queryString: string, apiSecret: string) => void
 }
 
 export interface authParams {
@@ -87,4 +87,14 @@ export interface P2PHistoryResponse {
 	data: P2PData[]
 	total: number
 	success: boolean
+}
+
+export interface UserAssetResponse {
+	asset: string
+	free: string
+	locked: string
+	freeze: string
+	withdrawing: string
+	ipoable: string
+	btcValuation: string
 }

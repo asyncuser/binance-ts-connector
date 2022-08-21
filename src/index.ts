@@ -7,7 +7,7 @@ import {
 	SystemStatusResponse,
 	AllCoinsParams,
 	AllCoinsData,
-	authParams
+	authParams, UserAssetResponse
 } from "./interfaces";
 import { removeEmptyValue } from "./utils";
 
@@ -17,20 +17,11 @@ export class Connector {
 	private apiSecret
 	private signFunction
 
-	constructor(params: authParams, options?: connectorOptions) {
+	constructor(params: authParams, options: connectorOptions) {
 		this.apiKey = params.apiKey
 		this.apiSecret = params.apiSecret
 		this.baseUrl = options?.apiUrl || 'https://api.binance.com'
-		this.signFunction = options?.signFunction || this.signRequest
-	}
-
-	private signRequest(queryString: string, apiSecret: string) {
-		const crypto = require('crypto')
-
-		return crypto
-			.createHmac('sha256', apiSecret)
-			.update(queryString)
-			.digest('hex')
+		this.signFunction = options.signFunction
 	}
 
 	private async request(method: 'GET' | 'POST', path: string, params: any = {}): Promise<{ data?: any, error?: any }> {
@@ -76,7 +67,7 @@ export class Connector {
 		return this.request('GET','sapi/v1/capital/config/getall', { ...params })
 	}
 
-	public async balance(type: 'SPOT' | 'MARGIN' | 'FUTURES' ,params?: any): Promise<{ data?: any, error?: any }> {
-		return this.request('POST','/sapi/v1/accountSnapshot', { ...params, type })
+	public async userAsset(type: 'SPOT' | 'MARGIN' | 'FUTURES', params?: any): Promise<{ data?: UserAssetResponse[], error?: any }> {
+		return this.request('POST','sapi/v3/asset/getUserAsset', { ...params, type })
 	}
 }
