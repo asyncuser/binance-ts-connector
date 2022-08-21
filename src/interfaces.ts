@@ -1,5 +1,11 @@
 export interface connectorOptions {
 	apiUrl?: string
+	signFunction: () => void
+}
+
+export interface authParams {
+	apiKey: string
+	apiSecret: string
 }
 
 export interface AllCoinsParams {

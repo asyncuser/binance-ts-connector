@@ -2,18 +2,27 @@ import axios from "axios";
 import * as crypto from "crypto";
 import * as qs from 'qs'
 
-import { connectorOptions, P2PRequestParams, SystemStatusResponse, AllCoinsParams, AllCoinsData } from "./interfaces";
+import {
+	connectorOptions,
+	P2PRequestParams,
+	SystemStatusResponse,
+	AllCoinsParams,
+	AllCoinsData,
+	authParams
+} from "./interfaces";
 import { removeEmptyValue } from "./utils";
 
 export class Connector {
 	private baseUrl
 	private apiKey
 	private apiSecret
+	private signFunction
 
-	constructor(apiKey: string, apiSecret: string, options?: connectorOptions) {
-		this.apiKey = apiKey
-		this.apiSecret = apiSecret
+	constructor(params: authParams, options?: connectorOptions) {
+		this.apiKey = params.apiKey
+		this.apiSecret = params.apiSecret
 		this.baseUrl = options?.apiUrl || 'https://api.binance.com'
+		this.signFunction = options?.signFunction || this.signRequest
 	}
 
 	private signRequest(queryString: string) {
